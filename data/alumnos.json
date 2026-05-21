@@ -171,15 +171,6 @@
     "isActive": true
   },
   {
-    "legajo": 10020,
-    "nombre": "Joaquín",
-    "apellido": "Ramos",
-    "email": "j.ramos@facultad.edu.ar",
-    "fechaAlta": "2026-05-05",
-    "modificacion": "2026-05-05",
-    "isActive": false
-  },
-  {
     "legajo": 10021,
     "nombre": "Bautista",
     "apellido": "Herrera",
@@ -204,24 +195,6 @@
     "email": "jc.vega@facultad.edu.ar",
     "fechaAlta": "2026-05-11",
     "modificacion": "2026-05-11",
-    "isActive": true
-  },
-  {
-    "legajo": 10024,
-    "nombre": "Catalina",
-    "apellido": "Blanco",
-    "email": "c.blanco@facultad.edu.ar",
-    "fechaAlta": "2026-05-12",
-    "modificacion": "2026-05-12",
-    "isActive": true
-  },
-  {
-    "legajo": 10025,
-    "nombre": "Tomás",
-    "apellido": "Méndez",
-    "email": "t.mendez@facultad.edu.ar",
-    "fechaAlta": "2026-05-14",
-    "modificacion": "2026-05-14",
     "isActive": true
   }
 ]

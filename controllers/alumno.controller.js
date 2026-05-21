@@ -163,17 +163,7 @@ const deleteAlumnoByLegajo = async (req, res) => {
 
     alumnos.splice(index, 1)
 
-    // const index = alumnos.findIndex(
-    //   (alumno) => alumno.legajo === Number(legajo)
-    // )
-
-    // if (index === -1) {
-    //   return res.status(404).json({
-    //     msg: `No se encontró el alumno con el legajo n° ${legajo}`
-    //   })
-    // }
-
-    fs.writeFile(
+    await fs.writeFile(
       './data/alumnos.json',
       JSON.stringify(alumnos, null, 2),
       'utf8'
@@ -181,10 +171,11 @@ const deleteAlumnoByLegajo = async (req, res) => {
 
     return res.status(200).json({
       msg: `Se eliminó correctamente el alumno con el legajo n° ${alumnoEncontrado.legajo}`,
-      alumno: `${alumnoEncontrado}`
+      alumno: alumnoEncontrado
     })
   } catch (error) {
     return res.status(500).json({
+      err: console.log(error),
       error: 'No se puedo eliminar el alumno del sistema'
     })
   }
