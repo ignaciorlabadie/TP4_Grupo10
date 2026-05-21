@@ -5,13 +5,14 @@ require('dotenv').config()
 class Server {
   constructor () {
     this.app = express()
-    this.port = process.env.PORT || 3000
+    this.port = process.env.PORT || 3001
     this.middleware()
     this.rutas()
   }
 
   middleware () {
     this.app.use(cors())
+    this.app.use(express.json())
   }
 
   rutas () {
