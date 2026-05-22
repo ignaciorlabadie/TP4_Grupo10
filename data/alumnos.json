@@ -208,9 +208,18 @@
   },
   {
     "legajo": 10025,
-    "nombre": "Juan",
-    "apellido": "Ramirez",
-    "email": "juanramirez@mail.com",
+    "nombre": "Miguel",
+    "apellido": "Perez",
+    "email": "miguelgonzalez@mail.com",
+    "fechaAlta": "2026-05-22",
+    "modificacion": "2026-05-22",
+    "isActive": true
+  },
+  {
+    "legajo": 10026,
+    "nombre": "Tomas",
+    "apellido": "Fernandez",
+    "email": "tomasfernandez@mail.com",
     "fechaAlta": "2026-05-22",
     "modificacion": "2026-05-22",
     "isActive": true
