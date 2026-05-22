@@ -46,6 +46,13 @@ const postNewAlumno = async (req, res) => {
     const data = await fs.readFile('./data/alumnos.json', 'utf8')
     const alumnos = JSON.parse(data)
 
+    const existeEmail = alumnos.some((alumno) => alumno.email === email)
+    if (existeEmail) {
+      return res.status(409).json({
+        msg: `Ya existe un alumno con el email ${email}`
+      })
+    }
+
     console.log('Se parseó la infomración a "alumnos"')
 
     const legajos = alumnos.map((alumno) => alumno.legajo)
