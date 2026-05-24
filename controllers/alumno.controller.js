@@ -16,11 +16,10 @@ const getAlumnoAll = async (req, res) => {
 }
 
 const getAlumnoById = async (req, res) => {
+  const { legajo } = req.params
   try {
     const data = await fs.readFile('./data/alumnos.json', 'utf8')
     const alumnos = JSON.parse(data)
-
-    const { legajo } = req.params
 
     const legajoId = alumnos.find((a) => Number(a.legajo) === Number(legajo))
 
@@ -32,9 +31,8 @@ const getAlumnoById = async (req, res) => {
 
     return res.status(200).json(legajoId)
   } catch (error) {
-    console.log(error)
     return res.status(500).json({
-      error: 'No se pudo obtener el datalle del alumno con legajo n° {legajo}'
+      error: `No se pudo obtener el detalle del alumno con legajo n° ${legajo}`
     })
   }
 }
@@ -53,13 +51,14 @@ const postNewAlumno = async (req, res) => {
       })
     }
 
-    console.log('Se parseó la infomración a "alumnos"')
+    console.log('Se parseó la información a "alumnos"')
 
     const legajos = alumnos.map((alumno) => alumno.legajo)
-    const nuevoLejago = Math.max(...legajos) + 1
-    console.log(`Nuevo legajo generado: ${nuevoLejago}`)
 
-    const nuevoAlumno = new AlumnoModel(nombre, apellido, email, nuevoLejago)
+    const nuevoLegajo = Math.max(...legajos) + 1
+    console.log(`Nuevo legajo generado: ${nuevoLegajo}`)
+
+    const nuevoAlumno = new AlumnoModel(nombre, apellido, email, nuevoLegajo)
 
     console.log(nuevoAlumno)
     const alumnoNuevo = nuevoAlumno.getAllAttributes()
@@ -92,7 +91,7 @@ const putAlumnoBylegajo = async (req, res) => {
     const alumnos = JSON.parse(data)
 
     const index = alumnos.findIndex(
-      (alumno) => alumno.legajo === Number(legajo)
+      (alumno) => Number(alumno.legajo) === Number(legajo)
     )
 
     if (index === -1) {
@@ -101,13 +100,24 @@ const putAlumnoBylegajo = async (req, res) => {
       })
     }
 
+    if (email) {
+      const existe = alumnos.some((a, i) => a.email === email && i !== index)
+
+      if (existe) {
+        return res.status(409).json({
+          msg: `Ya existe otro alumno con el email ${email}`
+        })
+      }
+    }
+
     const alumnoEncontrado = alumnos[index]
 
     const alumnoModificado = new AlumnoModel(
       alumnoEncontrado.nombre,
       alumnoEncontrado.apellido,
       alumnoEncontrado.email,
-      alumnoEncontrado.legajo
+      alumnoEncontrado.legajo,
+      alumnoEncontrado.isActive
     )
 
     if (nombre) alumnoModificado.setNombre(nombre)
@@ -128,17 +138,15 @@ const putAlumnoBylegajo = async (req, res) => {
       alumno: alumnos[index]
     })
   } catch (error) {
-    console.log(error)
     return res.status(500).json({
-      error: `No se pudo actualizar el alumno con legajo ${req.params.legajo}`
+      error: `No se pudo actualizar el alumno con legajo ${legajo}`
     })
   }
 }
 
 const deleteAlumnoByLegajo = async (req, res) => {
+  const { legajo } = req.params
   try {
-    const { legajo } = req.params
-
     const data = await fs.readFile('./data/alumnos.json', 'utf8')
     const alumnos = JSON.parse(data)
 
@@ -167,7 +175,6 @@ const deleteAlumnoByLegajo = async (req, res) => {
       alumno: alumnoEncontrado
     })
   } catch (error) {
-    console.log(error)
     return res.status(500).json({
       error: 'No se puedo eliminar el alumno del sistema'
     })
