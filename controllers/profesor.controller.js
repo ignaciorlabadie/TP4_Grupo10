@@ -1,9 +1,11 @@
 const fs = require('fs').promises
 const { ProfesorModel } = require('../models/extras/profesor.model')
+const path = require('path')
+const filePath = path.join(__dirname, '../data/extras/sys-profesores.json')
 
 const getProfesoresAll = async (req, res) => {
   try {
-    const data = await fs.readFile('../data/extras/sys-profesores.json', 'utf8')
+    const data = await fs.readFile(filePath, 'utf8')
     const profesores = JSON.parse(data)
 
     return res.status(200).json(profesores)
@@ -19,7 +21,7 @@ const getProfesoresAll = async (req, res) => {
 const getProfesorById = async (req, res) => {
   const { idProfesor } = req.params
   try {
-    const data = await fs.readFile('../data/extras/sys-profesores.json', 'utf8')
+    const data = await fs.readFile(filePath, 'utf8')
     const profesores = JSON.parse(data)
 
     const idProfesorNum = profesores.find(
@@ -45,7 +47,7 @@ const postNewProfesor = async (req, res) => {
   try {
     const { nombre, apellido, especialidad, email, isActive } = req.body
 
-    const data = await fs.readFile('../data/extras/sys-profesores.json', 'utf8')
+    const data = await fs.readFile(filePath, 'utf8')
     const profesores = JSON.parse(data)
 
     const existeEmail = profesores.some((profesor) => profesor.email === email)
@@ -63,11 +65,11 @@ const postNewProfesor = async (req, res) => {
     console.log(`Nuevo id generado: ${nuevoId}`)
 
     const nuevoProfesor = new ProfesorModel(
-      nuevoId,
       nombre,
       apellido,
-      especialidad,
       email,
+      nuevoId,
+      especialidad,
       isActive ?? true
     )
 
@@ -76,11 +78,7 @@ const postNewProfesor = async (req, res) => {
     profesores.push(profesorNuevo)
     console.log(nuevoProfesor.getAllAttributes())
 
-    await fs.writeFile(
-      '../data/extras/sys-profesores.json',
-      JSON.stringify(profesores, null, 2),
-      'utf8'
-    )
+    await fs.writeFile(filePath, JSON.stringify(profesores, null, 2), 'utf8')
 
     return res.status(201).json({
       msg: 'Profesor creado correctamente',
@@ -98,7 +96,7 @@ const putProfesorById = async (req, res) => {
   try {
     const { nombre, apellido, especialidad, email, isActive } = req.body
 
-    const data = await fs.readFile('../data/extras/sys-profesores.json', 'utf8')
+    const data = await fs.readFile(filePath, 'utf8')
     const profesores = JSON.parse(data)
 
     const index = profesores.findIndex(
@@ -124,11 +122,11 @@ const putProfesorById = async (req, res) => {
     const profesorEncontrado = profesores[index]
 
     const profesorModificado = new ProfesorModel(
-      profesorEncontrado.idProfesor,
       profesorEncontrado.nombre,
       profesorEncontrado.apellido,
-      profesorEncontrado.especialidad,
       profesorEncontrado.email,
+      profesorEncontrado.idProfesor,
+      profesorEncontrado.especialidad,
       profesorEncontrado.isActive
     )
 
@@ -140,11 +138,7 @@ const putProfesorById = async (req, res) => {
 
     profesores[index] = profesorModificado.getAllAttributes()
 
-    await fs.writeFile(
-      '../data/extras/sys-profesores.json',
-      JSON.stringify(profesores, null, 2),
-      'utf8'
-    )
+    await fs.writeFile(filePath, JSON.stringify(profesores, null, 2), 'utf8')
 
     return res.status(200).json({
       msg: 'Profesor modificado correctamente',
@@ -160,7 +154,7 @@ const putProfesorById = async (req, res) => {
 const deleteProfesorById = async (req, res) => {
   const { idProfesor } = req.params
   try {
-    const data = await fs.readFile('../data/extras/sys-profesores.json', 'utf8')
+    const data = await fs.readFile(filePath, 'utf8')
     const profesores = JSON.parse(data)
 
     const index = profesores.findIndex(
@@ -177,11 +171,7 @@ const deleteProfesorById = async (req, res) => {
 
     profesores.splice(index, 1)
 
-    await fs.writeFile(
-      '../data/extras/sys-profesores.json',
-      JSON.stringify(profesores, null, 2),
-      'utf8'
-    )
+    await fs.writeFile(filePath, JSON.stringify(profesores, null, 2), 'utf8')
 
     return res.status(200).json({
       msg: 'Profesor eliminado correctamente',
