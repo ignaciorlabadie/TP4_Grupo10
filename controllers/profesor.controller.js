@@ -17,11 +17,10 @@ const getProfesoresAll = async (req, res) => {
 }
 
 const getProfesorById = async (req, res) => {
+  const { idProfesor } = req.params
   try {
     const data = await fs.readFile('../data/extras/sys-profesores.json', 'utf8')
     const profesores = JSON.parse(data)
-
-    const { idProfesor } = req.params
 
     const idProfesorNum = profesores.find(
       (p) => Number(p.idProfesor) === Number(idProfesor)
@@ -42,37 +41,52 @@ const getProfesorById = async (req, res) => {
   }
 }
 
-const postProfesor = async (req, res) => {
+const postNewProfesor = async (req, res) => {
   try {
-    const { nombre, apellido, especialidad, email } = req.body
-    // Dejé aca
-    const profesores = await obtenerProfesores()
+    const { nombre, apellido, especialidad, email, isActive } = req.body
+
+    const data = await fs.readFile('../data/extras/sys-profesores.json', 'utf8')
+    const profesores = JSON.parse(data)
+
+    const existeEmail = profesores.some((profesor) => profesor.email === email)
+    if (existeEmail) {
+      return res.status(409).json({
+        msg: `Ya existe un profesor con el email ${email}`
+      })
+    }
+
+    console.log('Se parseó la información a "profesores"')
 
     const ids = profesores.map((profesor) => profesor.idProfesor)
 
-    const nuevoId = ids.length > 0 ? Math.max(...ids) + 1 : 1
+    const nuevoId = Math.max(...ids) + 1
+    console.log(`Nuevo id generado: ${nuevoId}`)
 
     const nuevoProfesor = new ProfesorModel(
       nuevoId,
       nombre,
+      apellido,
       especialidad,
       email,
       isActive ?? true
     )
 
+    console.log(nuevoProfesor)
     const profesorNuevo = nuevoProfesor.getAllAttributes()
-
     profesores.push(profesorNuevo)
+    console.log(nuevoProfesor.getAllAttributes())
 
-    await guardarProfesores(profesores)
+    await fs.writeFile(
+      '../data/extras/sys-profesores.json',
+      JSON.stringify(profesores, null, 2),
+      'utf8'
+    )
 
     return res.status(201).json({
       msg: 'Profesor creado correctamente',
-      profesor: profesorNuevo
+      profesorNuevo
     })
   } catch (error) {
-    console.log(error)
-
     return res.status(500).json({
       error: 'No se pudo crear el profesor'
     })
@@ -80,15 +94,15 @@ const postProfesor = async (req, res) => {
 }
 
 const putProfesorById = async (req, res) => {
+  const { idProfesor } = req.params
   try {
-    const { idProfesor } = req.params
+    const { nombre, apellido, especialidad, email, isActive } = req.body
 
-    const { nombre, especialidad, email, isActive } = req.body
-
-    const profesores = await obtenerProfesores()
+    const data = await fs.readFile('../data/extras/sys-profesores.json', 'utf8')
+    const profesores = JSON.parse(data)
 
     const index = profesores.findIndex(
-      (p) => p.idProfesor === Number(idProfesor)
+      (p) => Number(p.idProfesor) === Number(idProfesor)
     )
 
     if (index === -1) {
@@ -97,43 +111,46 @@ const putProfesorById = async (req, res) => {
       })
     }
 
+    if (email) {
+      const existe = profesores.some((p, i) => p.email === email && i !== index)
+
+      if (existe) {
+        return res.status(409).json({
+          msg: `Ya existe otro profesor con el email ${email}`
+        })
+      }
+    }
+
     const profesorEncontrado = profesores[index]
 
     const profesorModificado = new ProfesorModel(
       profesorEncontrado.idProfesor,
       profesorEncontrado.nombre,
+      profesorEncontrado.apellido,
       profesorEncontrado.especialidad,
       profesorEncontrado.email,
       profesorEncontrado.isActive
     )
 
-    if (nombre) {
-      profesorModificado.setNombre(nombre)
-    }
-
-    if (especialidad) {
-      profesorModificado.setEspecialidad(especialidad)
-    }
-
-    if (email) {
-      profesorModificado.setEmail(email)
-    }
-
-    if (isActive !== undefined) {
-      profesorModificado.setIsActive(isActive)
-    }
+    if (nombre) profesorModificado.setNombre(nombre)
+    if (apellido) profesorModificado.setApellido(apellido)
+    if (especialidad) profesorModificado.setEspecialidad(especialidad)
+    if (email) profesorModificado.setEmail(email)
+    if (isActive !== undefined) profesorModificado.setIsActive(isActive)
 
     profesores[index] = profesorModificado.getAllAttributes()
 
-    await guardarProfesores(profesores)
+    await fs.writeFile(
+      '../data/extras/sys-profesores.json',
+      JSON.stringify(profesores, null, 2),
+      'utf8'
+    )
 
     return res.status(200).json({
       msg: 'Profesor modificado correctamente',
       profesor: profesorModificado.getAllAttributes()
     })
   } catch (error) {
-    console.log(error)
-
     return res.status(500).json({
       error: 'No se pudo modificar el profesor'
     })
@@ -141,13 +158,13 @@ const putProfesorById = async (req, res) => {
 }
 
 const deleteProfesorById = async (req, res) => {
+  const { idProfesor } = req.params
   try {
-    const { idProfesor } = req.params
-
-    const profesores = await obtenerProfesores()
+    const data = await fs.readFile('../data/extras/sys-profesores.json', 'utf8')
+    const profesores = JSON.parse(data)
 
     const index = profesores.findIndex(
-      (p) => p.idProfesor === Number(idProfesor)
+      (p) => Number(p.idProfesor) === Number(idProfesor)
     )
 
     if (index === -1) {
@@ -160,15 +177,17 @@ const deleteProfesorById = async (req, res) => {
 
     profesores.splice(index, 1)
 
-    await guardarProfesores(profesores)
+    await fs.writeFile(
+      '../data/extras/sys-profesores.json',
+      JSON.stringify(profesores, null, 2),
+      'utf8'
+    )
 
     return res.status(200).json({
       msg: 'Profesor eliminado correctamente',
       profesor: profesorEliminado
     })
   } catch (error) {
-    console.log(error)
-
     return res.status(500).json({
       error: 'No se pudo eliminar el profesor'
     })
@@ -178,7 +197,7 @@ const deleteProfesorById = async (req, res) => {
 module.exports = {
   getProfesoresAll,
   getProfesorById,
-  postProfesor,
+  postNewProfesor,
   putProfesorById,
   deleteProfesorById
 }
