@@ -21,17 +21,17 @@ const getClasesAll = async (req, res) => {
 
 const getClaseById = async (req, res) => {
   try {
-    const { id } = req.params
+    const { idMateria } = req.params
 
     const clases = await obtenerClases()
 
     const clase = clases.find(
-      (c) => c.id === Number(id)
+      (c) => c.idMateria === idMateria
     )
 
     if (!clase) {
       return res.status(404).json({
-        msg: `No existe la clase con id ${id}`
+        msg: `No existe la clase con id ${idMateria}`
       })
     }
 
@@ -48,26 +48,27 @@ const getClaseById = async (req, res) => {
 const postClase = async (req, res) => {
   try {
     const {
+      idMateria,
       nombre,
-      profesorId,
-      aula
+      cuatrimestre
     } = req.body
 
     const clases = await obtenerClases()
 
-    const ids = clases.map((c) => c.id)
+    const claseExistente = clases.find(
+      (c) => c.idMateria === idMateria
+    )
 
-    const nuevoId =
-      ids.length > 0
-        ? Math.max(...ids) + 1
-        : 1
+    if (claseExistente) {
+      return res.status(409).json({
+        error: 'La clase ya existe'
+      })
+    }
 
     const nuevaClase = new ClaseModel(
-      nuevoId,
+      idMateria,
       nombre,
-      profesorId,
-      aula,
-      true
+      cuatrimestre
     )
 
     const claseNueva =
@@ -78,7 +79,7 @@ const postClase = async (req, res) => {
     await guardarClases(clases)
 
     return res.status(201).json({
-      msg: `Se creó la clase con id ${nuevoId}`,
+      msg: 'Clase creada correctamente',
       clase: claseNueva
     })
   } catch (error) {
@@ -92,51 +93,44 @@ const postClase = async (req, res) => {
 
 const putClaseById = async (req, res) => {
   try {
-    const { id } = req.params
+    const { idMateria } = req.params
 
     const {
       nombre,
-      profesorId,
-      aula,
-      isActive
+      cuatrimestre
     } = req.body
 
     const clases = await obtenerClases()
 
     const index = clases.findIndex(
-      (c) => c.id === Number(id)
+      (c) => c.idMateria === idMateria
     )
 
     if (index === -1) {
       return res.status(404).json({
-        msg: `No existe la clase con id ${id}`
+        msg: `No existe la clase con id ${idMateria}`
       })
     }
 
     const claseEncontrada = clases[index]
 
-    const claseModificada = new ClaseModel(
-      claseEncontrada.id,
-      claseEncontrada.nombre,
-      claseEncontrada.profesorId,
-      claseEncontrada.aula,
-      claseEncontrada.isActive
-    )
+    const claseModificada =
+      new ClaseModel(
+        claseEncontrada.idMateria,
+        claseEncontrada.nombre,
+        claseEncontrada.cuatrimestre
+      )
 
     if (nombre) {
       claseModificada.setNombre(nombre)
     }
 
-    if (profesorId) {
-      claseModificada.setProfesorId(profesorId)
-    }
-
-    if (aula) {
-      claseModificada.setAula(aula)
-    }
-
-    if (isActive !== undefined) {
-      claseModificada.setIsActive(isActive)
+    if (
+      cuatrimestre !== undefined
+    ) {
+      claseModificada.setCuatrimestre(
+        cuatrimestre
+      )
     }
 
     clases[index] =
@@ -145,7 +139,7 @@ const putClaseById = async (req, res) => {
     await guardarClases(clases)
 
     return res.status(200).json({
-      msg: `Se modificó la clase con id ${id}`,
+      msg: 'Clase modificada correctamente',
       clase:
         claseModificada.getAllAttributes()
     })
@@ -158,19 +152,22 @@ const putClaseById = async (req, res) => {
   }
 }
 
-const deleteClaseById = async (req, res) => {
+const deleteClaseById = async (
+  req,
+  res
+) => {
   try {
-    const { id } = req.params
+    const { idMateria } = req.params
 
     const clases = await obtenerClases()
 
     const index = clases.findIndex(
-      (c) => c.id === Number(id)
+      (c) => c.idMateria === idMateria
     )
 
     if (index === -1) {
       return res.status(404).json({
-        msg: `No existe la clase con id ${id}`
+        msg: `No existe la clase con id ${idMateria}`
       })
     }
 
@@ -181,7 +178,7 @@ const deleteClaseById = async (req, res) => {
     await guardarClases(clases)
 
     return res.status(200).json({
-      msg: `Se eliminó la clase con id ${id}`,
+      msg: 'Clase eliminada correctamente',
       clase: claseEliminada
     })
   } catch (error) {

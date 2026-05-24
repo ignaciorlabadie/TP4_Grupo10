@@ -1,39 +1,47 @@
 export class NotaModel {
   id: number
-  alumnoLegajo: number
-  claseId: number
+  legajo: number
+  idMateria: string
   nota: number
+  fecha: string
 
   constructor(
     id: number,
-    alumnoLegajo: number,
-    claseId: number,
-    nota: number
+    legajo: number,
+    idMateria: string,
+    nota: number,
+    fecha: string
   ) {
     this.id = id
-    this.alumnoLegajo = alumnoLegajo
-    this.claseId = claseId
+    this.legajo = legajo
+    this.idMateria = idMateria
     this.nota = nota
+    this.fecha = fecha
   }
 
-  setAlumnoLegajo(alumnoLegajo: number): void {
-    this.alumnoLegajo = alumnoLegajo
+  setLegajo(legajo: number): void {
+    this.legajo = legajo
   }
 
-  setClaseId(claseId: number): void {
-    this.claseId = claseId
+  setIdMateria(idMateria: string): void {
+    this.idMateria = idMateria
   }
 
   setNota(nota: number): void {
     this.nota = nota
   }
 
+  setFecha(fecha: string): void {
+    this.fecha = fecha
+  }
+
   getAllAttributes() {
     return {
       id: this.id,
-      alumnoLegajo: this.alumnoLegajo,
-      claseId: this.claseId,
-      nota: this.nota
+      legajo: this.legajo,
+      idMateria: this.idMateria,
+      nota: this.nota,
+      fecha: this.fecha
     }
   }
 }

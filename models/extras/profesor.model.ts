@@ -1,18 +1,18 @@
 export class ProfesorModel {
-  id: number
+  idProfesor: number
   nombre: string
   especialidad: string
   email: string
   isActive: boolean
 
   constructor(
-    id: number,
+    idProfesor: number,
     nombre: string,
     especialidad: string,
     email: string,
     isActive: boolean = true
   ) {
-    this.id = id
+    this.idProfesor = idProfesor
     this.nombre = nombre
     this.especialidad = especialidad
     this.email = email
@@ -37,7 +37,7 @@ export class ProfesorModel {
 
   getAllAttributes() {
     return {
-      id: this.id,
+      idProfesor: this.idProfesor,
       nombre: this.nombre,
       especialidad: this.especialidad,
       email: this.email,

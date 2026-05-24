@@ -1,4 +1,4 @@
-const { NotaModel } = require('../models/extras/nota.model')
+const { NotaModel } = require('../models/extras/alumno.model')
 
 const {
   obtenerNotas,
@@ -25,17 +25,17 @@ const getNotaById = async (req, res) => {
 
     const notas = await obtenerNotas()
 
-    const nota = notas.find(
-      (n) => n.id === Number(id)
+    const notaEncontrada = notas.find(
+      (nota) => nota.id === Number(id)
     )
 
-    if (!nota) {
+    if (!notaEncontrada) {
       return res.status(404).json({
         msg: `No existe la nota con id ${id}`
       })
     }
 
-    return res.status(200).json(nota)
+    return res.status(200).json(notaEncontrada)
   } catch (error) {
     console.log(error)
 
@@ -48,14 +48,17 @@ const getNotaById = async (req, res) => {
 const postNota = async (req, res) => {
   try {
     const {
-      alumnoLegajo,
-      claseId,
-      nota
+      legajo,
+      idMateria,
+      nota,
+      fecha
     } = req.body
 
     const notas = await obtenerNotas()
 
-    const ids = notas.map((n) => n.id)
+    const ids = notas.map(
+      (nota) => nota.id
+    )
 
     const nuevoId =
       ids.length > 0
@@ -64,9 +67,10 @@ const postNota = async (req, res) => {
 
     const nuevaNota = new NotaModel(
       nuevoId,
-      alumnoLegajo,
-      claseId,
-      nota
+      legajo,
+      idMateria,
+      nota,
+      fecha
     )
 
     const notaNueva =
@@ -94,15 +98,16 @@ const putNotaById = async (req, res) => {
     const { id } = req.params
 
     const {
-      alumnoLegajo,
-      claseId,
-      nota
+      legajo,
+      idMateria,
+      nota,
+      fecha
     } = req.body
 
     const notas = await obtenerNotas()
 
     const index = notas.findIndex(
-      (n) => n.id === Number(id)
+      (nota) => nota.id === Number(id)
     )
 
     if (index === -1) {
@@ -115,23 +120,26 @@ const putNotaById = async (req, res) => {
 
     const notaModificada = new NotaModel(
       notaEncontrada.id,
-      notaEncontrada.alumnoLegajo,
-      notaEncontrada.claseId,
-      notaEncontrada.nota
+      notaEncontrada.legajo,
+      notaEncontrada.idMateria,
+      notaEncontrada.nota,
+      notaEncontrada.fecha
     )
 
-    if (alumnoLegajo) {
-      notaModificada.setAlumnoLegajo(
-        alumnoLegajo
-      )
+    if (legajo) {
+      notaModificada.setLegajo(legajo)
     }
 
-    if (claseId) {
-      notaModificada.setClaseId(claseId)
+    if (idMateria) {
+      notaModificada.setIdMateria(idMateria)
     }
 
     if (nota !== undefined) {
       notaModificada.setNota(nota)
+    }
+
+    if (fecha) {
+      notaModificada.setFecha(fecha)
     }
 
     notas[index] =
@@ -160,7 +168,7 @@ const deleteNotaById = async (req, res) => {
     const notas = await obtenerNotas()
 
     const index = notas.findIndex(
-      (n) => n.id === Number(id)
+      (nota) => nota.id === Number(id)
     )
 
     if (index === -1) {

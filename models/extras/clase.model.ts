@@ -1,47 +1,33 @@
 export class ClaseModel {
-  id: number
+  idMateria: string
   nombre: string
-  profesorId: number
-  aula: string
-  isActive: boolean
+  cuatrimestre: number
 
   constructor(
-    id: number,
+    idMateria: string,
     nombre: string,
-    profesorId: number,
-    aula: string,
-    isActive: boolean = true
+    cuatrimestre: number
   ) {
-    this.id = id
+    this.idMateria = idMateria
     this.nombre = nombre
-    this.profesorId = profesorId
-    this.aula = aula
-    this.isActive = isActive
+    this.cuatrimestre = cuatrimestre
   }
 
   setNombre(nombre: string): void {
     this.nombre = nombre
   }
 
-  setProfesorId(profesorId: number): void {
-    this.profesorId = profesorId
-  }
-
-  setAula(aula: string): void {
-    this.aula = aula
-  }
-
-  setIsActive(isActive: boolean): void {
-    this.isActive = isActive
+  setCuatrimestre(
+    cuatrimestre: number
+  ): void {
+    this.cuatrimestre = cuatrimestre
   }
 
   getAllAttributes() {
     return {
-      id: this.id,
+      idMateria: this.idMateria,
       nombre: this.nombre,
-      profesorId: this.profesorId,
-      aula: this.aula,
-      isActive: this.isActive
+      cuatrimestre: this.cuatrimestre
     }
   }
 }

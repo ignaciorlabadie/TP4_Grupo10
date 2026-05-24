@@ -3,96 +3,124 @@ const { ProfesorModel } = require('../models/extras/porsesor.model')
 const {
   obtenerProfesores,
   guardarProfesores
-} = require('../repositories/profesores.repository')
+} = require('../persistence/profesores.persistence')
 
 const getProfesoresAll = async (req, res) => {
   try {
-    const profesores = await obtenerProfesores()
+    const profesores =
+      await obtenerProfesores()
 
     return res.status(200).json(profesores)
   } catch (error) {
     console.log(error)
 
     return res.status(500).json({
-      error: 'No se pudieron obtener los profesores'
+      error:
+        'No se pudieron obtener los profesores'
     })
   }
 }
 
-const getProfesorById = async (req, res) => {
+const getProfesorById = async (
+  req,
+  res
+) => {
   try {
-    const { id } = req.params
+    const { idProfesor } = req.params
 
-    const profesores = await obtenerProfesores()
+    const profesores =
+      await obtenerProfesores()
 
     const profesor = profesores.find(
-      (p) => p.id === Number(id)
+      (p) =>
+        p.idProfesor ===
+        Number(idProfesor)
     )
 
     if (!profesor) {
       return res.status(404).json({
-        msg: `No existe el profesor con id ${id}`
+        msg: `No existe el profesor con id ${idProfesor}`
       })
     }
 
-    return res.status(200).json(profesor)
+    return res.status(200).json(
+      profesor
+    )
   } catch (error) {
     console.log(error)
 
     return res.status(500).json({
-      error: 'No se pudo obtener el profesor'
+      error:
+        'No se pudo obtener el profesor'
     })
   }
 }
 
-const postProfesor = async (req, res) => {
+const postProfesor = async (
+  req,
+  res
+) => {
   try {
     const {
       nombre,
       especialidad,
-      email
+      email,
+      isActive
     } = req.body
 
-    const profesores = await obtenerProfesores()
+    const profesores =
+      await obtenerProfesores()
 
-    const ids = profesores.map((p) => p.id)
+    const ids = profesores.map(
+      (profesor) =>
+        profesor.idProfesor
+    )
 
     const nuevoId =
       ids.length > 0
         ? Math.max(...ids) + 1
         : 1
 
-    const nuevoProfesor = new ProfesorModel(
-      nuevoId,
-      nombre,
-      especialidad,
-      email,
-      true
-    )
+    const nuevoProfesor =
+      new ProfesorModel(
+        nuevoId,
+        nombre,
+        especialidad,
+        email,
+        isActive ?? true
+      )
 
     const profesorNuevo =
       nuevoProfesor.getAllAttributes()
 
     profesores.push(profesorNuevo)
 
-    await guardarProfesores(profesores)
+    await guardarProfesores(
+      profesores
+    )
 
     return res.status(201).json({
-      msg: `Se creó el profesor con id ${nuevoId}`,
+      msg:
+        'Profesor creado correctamente',
       profesor: profesorNuevo
     })
   } catch (error) {
     console.log(error)
 
     return res.status(500).json({
-      error: 'No se pudo crear el profesor'
+      error:
+        'No se pudo crear el profesor'
     })
   }
 }
 
-const putProfesorById = async (req, res) => {
+const putProfesorById = async (
+  req,
+  res
+) => {
   try {
-    const { id } = req.params
+    const { idProfesor } =
+      req.params
 
     const {
       nombre,
@@ -101,51 +129,70 @@ const putProfesorById = async (req, res) => {
       isActive
     } = req.body
 
-    const profesores = await obtenerProfesores()
+    const profesores =
+      await obtenerProfesores()
 
-    const index = profesores.findIndex(
-      (p) => p.id === Number(id)
-    )
+    const index =
+      profesores.findIndex(
+        (p) =>
+          p.idProfesor ===
+          Number(idProfesor)
+      )
 
     if (index === -1) {
       return res.status(404).json({
-        msg: `No existe el profesor con id ${id}`
+        msg: `No existe el profesor con id ${idProfesor}`
       })
     }
 
-    const profesorEncontrado = profesores[index]
+    const profesorEncontrado =
+      profesores[index]
 
-    const profesorModificado = new ProfesorModel(
-      profesorEncontrado.id,
-      profesorEncontrado.nombre,
-      profesorEncontrado.especialidad,
-      profesorEncontrado.email,
-      profesorEncontrado.isActive
-    )
+    const profesorModificado =
+      new ProfesorModel(
+        profesorEncontrado.idProfesor,
+        profesorEncontrado.nombre,
+        profesorEncontrado.especialidad,
+        profesorEncontrado.email,
+        profesorEncontrado.isActive
+      )
 
     if (nombre) {
-      profesorModificado.setNombre(nombre)
+      profesorModificado.setNombre(
+        nombre
+      )
     }
 
     if (especialidad) {
-      profesorModificado.setEspecialidad(especialidad)
+      profesorModificado.setEspecialidad(
+        especialidad
+      )
     }
 
     if (email) {
-      profesorModificado.setEmail(email)
+      profesorModificado.setEmail(
+        email
+      )
     }
 
-    if (isActive !== undefined) {
-      profesorModificado.setIsActive(isActive)
+    if (
+      isActive !== undefined
+    ) {
+      profesorModificado.setIsActive(
+        isActive
+      )
     }
 
     profesores[index] =
       profesorModificado.getAllAttributes()
 
-    await guardarProfesores(profesores)
+    await guardarProfesores(
+      profesores
+    )
 
     return res.status(200).json({
-      msg: `Se modificó el profesor con id ${id}`,
+      msg:
+        'Profesor modificado correctamente',
       profesor:
         profesorModificado.getAllAttributes()
     })
@@ -153,42 +200,57 @@ const putProfesorById = async (req, res) => {
     console.log(error)
 
     return res.status(500).json({
-      error: 'No se pudo modificar el profesor'
+      error:
+        'No se pudo modificar el profesor'
     })
   }
 }
 
-const deleteProfesorById = async (req, res) => {
+const deleteProfesorById = async (
+  req,
+  res
+) => {
   try {
-    const { id } = req.params
+    const { idProfesor } =
+      req.params
 
-    const profesores = await obtenerProfesores()
+    const profesores =
+      await obtenerProfesores()
 
-    const index = profesores.findIndex(
-      (p) => p.id === Number(id)
-    )
+    const index =
+      profesores.findIndex(
+        (p) =>
+          p.idProfesor ===
+          Number(idProfesor)
+      )
 
     if (index === -1) {
       return res.status(404).json({
-        msg: `No existe el profesor con id ${id}`
+        msg: `No existe el profesor con id ${idProfesor}`
       })
     }
 
-    const profesorEliminado = profesores[index]
+    const profesorEliminado =
+      profesores[index]
 
     profesores.splice(index, 1)
 
-    await guardarProfesores(profesores)
+    await guardarProfesores(
+      profesores
+    )
 
     return res.status(200).json({
-      msg: `Se eliminó el profesor con id ${id}`,
-      profesor: profesorEliminado
+      msg:
+        'Profesor eliminado correctamente',
+      profesor:
+        profesorEliminado
     })
   } catch (error) {
     console.log(error)
 
     return res.status(500).json({
-      error: 'No se pudo eliminar el profesor'
+      error:
+        'No se pudo eliminar el profesor'
     })
   }
 }
