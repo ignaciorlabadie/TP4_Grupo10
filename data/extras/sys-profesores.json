@@ -1,0 +1,122 @@
+[
+  {
+    "idProfesor": 10000,
+    "nombre": "Luciano",
+    "apellido": "Peralta",
+    "email": "luciano.peralta@demo.com",
+    "especialidad": "Programación",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10001,
+    "nombre": "Valeria",
+    "apellido": "Camila",
+    "email": "Sosa",
+    "especialidad": "camila.sosa@demo.com",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10004,
+    "nombre": "Valeria",
+    "apellido": "Rios",
+    "email": "valentina.rios@demo.com",
+    "especialidad": "Base de Datos",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10005,
+    "nombre": "Santiago",
+    "apellido": "Molina",
+    "email": "santiago.molina@demo.com",
+    "especialidad": "DevOps",
+    "isActive": false
+  },
+  {
+    "idProfesor": 10006,
+    "nombre": "Florencia",
+    "apellido": "Navarro",
+    "email": "florencia.navarro@demo.com",
+    "especialidad": "Testing",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10007,
+    "nombre": "Juan",
+    "apellido": "Acosta",
+    "email": "juan.acosta@demo.com",
+    "especialidad": "Seguridad Informática",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10008,
+    "nombre": "Agustina",
+    "apellido": "Farias",
+    "email": "agustina.farias@demo.com",
+    "especialidad": "UX/UI",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10009,
+    "nombre": "Nicolas",
+    "apellido": "Suarez",
+    "email": "nicolas.suarez@demo.com",
+    "especialidad": "Redes",
+    "isActive": false
+  },
+  {
+    "idProfesor": 10010,
+    "nombre": "Martina",
+    "apellido": "Benitez",
+    "email": "martina.benitez@demo.com",
+    "especialidad": "Arquitectura de Software",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10011,
+    "nombre": "Federico",
+    "apellido": "Paz",
+    "email": "federico.paz@demo.com",
+    "especialidad": "Programación",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10012,
+    "nombre": "Carla",
+    "apellido": "Ledesma",
+    "email": "carla.ledesma@demo.com",
+    "especialidad": "Frontend",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10013,
+    "nombre": "Ezequiel",
+    "apellido": "Campos",
+    "email": "ezequiel.campos@demo.com",
+    "especialidad": "Backend",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10014,
+    "nombre": "Rocio",
+    "apellido": "Vega",
+    "email": "rocio.vega@demo.com",
+    "especialidad": "Base de Datos",
+    "isActive": false
+  },
+  {
+    "idProfesor": 10015,
+    "nombre": "Gabriel",
+    "apellido": "Ortega",
+    "email": "gabriel.ortega@demo.com",
+    "especialidad": "DevOps",
+    "isActive": true
+  },
+  {
+    "idProfesor": 10016,
+    "nombre": "Nacho",
+    "apellido": "Ramirez",
+    "email": "ignacio_ramirez@mail.com",
+    "especialidad": "Backend",
+    "isActive": true
+  }
+]

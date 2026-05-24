@@ -1,5 +1,5 @@
-const validateAlumnoPut = (req, res, next) => {
-  const { nombre, apellido, email, isActive } = req.body
+const validateProfesorPut = (req, res, next) => {
+  const { nombre, apellido, email, especialidad, isActive } = req.body
   const errors = []
 
   if (nombre && typeof nombre !== 'string') {
@@ -22,6 +22,10 @@ const validateAlumnoPut = (req, res, next) => {
     errors.push('El campo isActive debe ser un booleano (true/false).')
   }
 
+  if (especialidad && typeof especialidad !== 'string') {
+    errors.push('La especialidad debe ser texto')
+  }
+
   if (errors.length > 0) {
     return res.status(400).json({ errors })
   }
@@ -29,4 +33,4 @@ const validateAlumnoPut = (req, res, next) => {
   next()
 }
 
-module.exports = { validateAlumnoPut }
+module.exports = { validateProfesorPut }
