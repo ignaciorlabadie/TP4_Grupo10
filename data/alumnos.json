@@ -196,5 +196,32 @@
     "fechaAlta": "2026-05-11",
     "modificacion": "2026-05-11",
     "isActive": true
+  },
+  {
+    "legajo": 10024,
+    "nombre": "Ignacio",
+    "apellido": "Gonzalez",
+    "email": "gonzalezignacio@mail.com",
+    "fechaAlta": "2026-05-22",
+    "modificacion": "2026-05-22",
+    "isActive": true
+  },
+  {
+    "legajo": 10025,
+    "nombre": "Miguel",
+    "apellido": "Perez",
+    "email": "miguelgonzalez@mail.com",
+    "fechaAlta": "2026-05-22",
+    "modificacion": "2026-05-22",
+    "isActive": true
+  },
+  {
+    "legajo": 10026,
+    "nombre": "Tomas",
+    "apellido": "Fernandez",
+    "email": "tomasfernandez@mail.com",
+    "fechaAlta": "2026-05-22",
+    "modificacion": "2026-05-22",
+    "isActive": true
   }
 ]
