@@ -1,46 +1,54 @@
-export class ProfesorModel {
+import { PersonaModel } from '../persona.model'
+
+export class ProfesorModel extends PersonaModel {
   idProfesor: number
-  nombre: string
   especialidad: string
-  email: string
   isActive: boolean
 
   constructor(
-    idProfesor: number,
     nombre: string,
-    especialidad: string,
+    apellido: string,
     email: string,
+    idProfesor: number,
+    especialidad: string,
     isActive: boolean = true
   ) {
+    super(nombre, apellido, email)
     this.idProfesor = idProfesor
-    this.nombre = nombre
     this.especialidad = especialidad
-    this.email = email
     this.isActive = isActive
   }
 
-  setNombre(nombre: string): void {
-    this.nombre = nombre
+  public getIdProfesor(): number {
+    return this.idProfesor
   }
 
-  setEspecialidad(especialidad: string): void {
+  public getEspecialidad(): string {
+    return this.especialidad
+  }
+
+  public setEspecialidad(especialidad: string): void {
     this.especialidad = especialidad
   }
 
-  setEmail(email: string): void {
-    this.email = email
-  }
-
-  setIsActive(isActive: boolean): void {
+  public setIsActive(isActive: boolean): void {
     this.isActive = isActive
   }
 
-  getAllAttributes() {
+  public override getAllAttributes(): {
+    idProfesor: number
+    nombre: string
+    apellido: string
+    email: string
+    especialidad: string
+    isActive: boolean
+  } {
     return {
       idProfesor: this.idProfesor,
       nombre: this.nombre,
-      especialidad: this.especialidad,
+      apellido: this.apellido,
       email: this.email,
+      especialidad: this.especialidad,
       isActive: this.isActive
     }
   }
