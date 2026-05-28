@@ -127,6 +127,8 @@ const putAlumnoBylegajo = async (req, res) => {
     if (email) alumnoModificado.setEmail(email)
     if (isActive !== undefined) alumnoModificado.setIsActive(isActive)
 
+    alumnoModificado.setModificacion(new Date().toISOString().split('T')[0])
+
     alumnos[index] = alumnoModificado.getAllAttributes()
 
     await fs.writeFile(
