@@ -72,7 +72,7 @@ const postNewAlumno = async (req, res) => {
     )
 
     return res.status(201).json({
-      msg: `Se agregó al sistema el alumno nuevo con el legajo n° ${nuevoLejago}`,
+      msg: `Se agregó al sistema el alumno nuevo con el legajo n° ${nuevoLegajo}`,
       alumnoNuevo
     })
   } catch (error) {
