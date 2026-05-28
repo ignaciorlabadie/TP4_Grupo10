@@ -118,6 +118,7 @@ const putAlumnoBylegajo = async (req, res) => {
       alumnoEncontrado.email,
       alumnoEncontrado.legajo,
       alumnoEncontrado.fechaAlta,
+      alumnoEncontrado.modificacion,
       alumnoEncontrado.isActive
     )
 
