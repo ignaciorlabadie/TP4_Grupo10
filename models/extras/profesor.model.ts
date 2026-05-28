@@ -1,9 +1,9 @@
 import { PersonaModel } from '../persona.model'
 
 export class ProfesorModel extends PersonaModel {
-  idProfesor: number
-  especialidad: string
-  isActive: boolean
+  private idProfesor: number
+  private especialidad: string
+  private isActive: boolean
 
   constructor(
     nombre: string,
