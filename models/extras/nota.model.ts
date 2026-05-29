@@ -1,16 +1,16 @@
 export class NotaModel {
-  id: number
-  legajo: number
-  idMateria: string
-  nota: number
-  fecha: string
+  private id: number
+  private legajo: number
+  private idMateria: string
+  private nota: number
+  private fecha: string
 
   constructor(
     id: number,
     legajo: number,
     idMateria: string,
     nota: number,
-    fecha: string
+    fecha: string = new Date().toISOString().split('T')[0]
   ) {
     this.id = id
     this.legajo = legajo
@@ -19,23 +19,51 @@ export class NotaModel {
     this.fecha = fecha
   }
 
-  setLegajo(legajo: number): void {
+  // id
+  public getId(): number {
+    return this.id
+  }
+
+  public setId(id: number): void {
+    this.id = id
+  }
+  // legajo
+  public setLegajo(legajo: number): void {
     this.legajo = legajo
   }
 
-  setIdMateria(idMateria: string): void {
+  public getLegajo(): number {
+    return this.legajo
+  }
+
+  // idMateria
+  public setIdMateria(idMateria: string): void {
     this.idMateria = idMateria
   }
 
-  setNota(nota: number): void {
+  public getIdMateria(): string {
+    return this.idMateria
+  }
+
+  // nota
+  public setNota(nota: number): void {
     this.nota = nota
   }
 
-  setFecha(fecha: string): void {
+  public getNota(): number {
+    return this.nota
+  }
+
+  // fecha
+  public setFecha(fecha: string): void {
     this.fecha = fecha
   }
 
-  getAllAttributes() {
+  public getFecha(): string {
+    return this.fecha
+  }
+
+  public getAllAttributes() {
     return {
       id: this.id,
       legajo: this.legajo,

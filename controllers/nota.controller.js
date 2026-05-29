@@ -1,18 +1,16 @@
-const { NotaModel } = require('../models/extras/alumno.model')
-
-const {
-  obtenerNotas,
-  guardarNotas
-} = require('../persistence/notas.persistence')
+const fs = require('fs').promises
+const path = require('path')
+const { NotaModel } = require('../models/extras/nota.model')
+const filePath = path.join(__dirname, '../data/extras/sys-notas.json')
 
 const getNotasAll = async (req, res) => {
   try {
-    const notas = await obtenerNotas()
+    const data = await fs.readFile(filePath, 'utf8')
+    const notas = JSON.parse(data)
 
     return res.status(200).json(notas)
   } catch (error) {
     console.log(error)
-
     return res.status(500).json({
       error: 'No se pudieron obtener las notas'
     })
@@ -20,14 +18,12 @@ const getNotasAll = async (req, res) => {
 }
 
 const getNotaById = async (req, res) => {
+  const { id } = req.params
   try {
-    const { id } = req.params
+    const data = await fs.readFile(filePath, 'utf8')
+    const notas = JSON.parse(data)
 
-    const notas = await obtenerNotas()
-
-    const notaEncontrada = notas.find(
-      (nota) => nota.id === Number(id)
-    )
+    const notaEncontrada = notas.find((nota) => Number(nota.id) === Number(id))
 
     if (!notaEncontrada) {
       return res.status(404).json({
@@ -38,47 +34,31 @@ const getNotaById = async (req, res) => {
     return res.status(200).json(notaEncontrada)
   } catch (error) {
     console.log(error)
-
     return res.status(500).json({
-      error: 'No se pudo obtener la nota'
+      error: `No se pudo obtener la nota del alumno con id ${id}`
     })
   }
 }
 
 const postNota = async (req, res) => {
   try {
-    const {
-      legajo,
-      idMateria,
-      nota,
-      fecha
-    } = req.body
+    const { legajo, idMateria, nota } = req.body
 
-    const notas = await obtenerNotas()
+    const data = await fs.readFile(filePath, 'utf8')
+    const notas = JSON.parse(data)
 
-    const ids = notas.map(
-      (nota) => nota.id
-    )
+    const ids = notas.map((nota) => nota.id)
 
-    const nuevoId =
-      ids.length > 0
-        ? Math.max(...ids) + 1
-        : 1
+    const nuevoId = Math.max(...ids) + 1
+    console.log(`Nuevo id generado: ${nuevoId}`)
 
-    const nuevaNota = new NotaModel(
-      nuevoId,
-      legajo,
-      idMateria,
-      nota,
-      fecha
-    )
+    const nuevaNota = new NotaModel(nuevoId, legajo, idMateria, nota)
 
-    const notaNueva =
-      nuevaNota.getAllAttributes()
+    const notaNueva = nuevaNota.getAllAttributes()
 
     notas.push(notaNueva)
 
-    await guardarNotas(notas)
+    await fs.writeFile(filePath, JSON.stringify(notas, null, 2), 'utf8')
 
     return res.status(201).json({
       msg: `Se creó la nota con id ${nuevoId}`,
@@ -86,7 +66,6 @@ const postNota = async (req, res) => {
     })
   } catch (error) {
     console.log(error)
-
     return res.status(500).json({
       error: 'No se pudo crear la nota'
     })
@@ -94,21 +73,14 @@ const postNota = async (req, res) => {
 }
 
 const putNotaById = async (req, res) => {
+  const { id } = req.params
   try {
-    const { id } = req.params
+    const { legajo, idMateria, nota } = req.body
 
-    const {
-      legajo,
-      idMateria,
-      nota,
-      fecha
-    } = req.body
+    const data = await fs.readFile(filePath, 'utf8')
+    const notas = JSON.parse(data)
 
-    const notas = await obtenerNotas()
-
-    const index = notas.findIndex(
-      (nota) => nota.id === Number(id)
-    )
+    const index = notas.findIndex((nota) => Number(nota.id) === Number(id))
 
     if (index === -1) {
       return res.status(404).json({
@@ -126,11 +98,11 @@ const putNotaById = async (req, res) => {
       notaEncontrada.fecha
     )
 
-    if (legajo) {
+    if (legajo !== undefined) {
       notaModificada.setLegajo(legajo)
     }
 
-    if (idMateria) {
+    if (idMateria !== undefined) {
       notaModificada.setIdMateria(idMateria)
     }
 
@@ -138,23 +110,16 @@ const putNotaById = async (req, res) => {
       notaModificada.setNota(nota)
     }
 
-    if (fecha) {
-      notaModificada.setFecha(fecha)
-    }
+    notas[index] = notaModificada.getAllAttributes()
 
-    notas[index] =
-      notaModificada.getAllAttributes()
-
-    await guardarNotas(notas)
+    await fs.writeFile(filePath, JSON.stringify(notas, null, 2), 'utf8')
 
     return res.status(200).json({
       msg: `Se modificó la nota con id ${id}`,
-      nota:
-        notaModificada.getAllAttributes()
+      nota: notaModificada.getAllAttributes()
     })
   } catch (error) {
     console.log(error)
-
     return res.status(500).json({
       error: 'No se pudo modificar la nota'
     })
@@ -162,14 +127,12 @@ const putNotaById = async (req, res) => {
 }
 
 const deleteNotaById = async (req, res) => {
+  const { id } = req.params
   try {
-    const { id } = req.params
+    const data = await fs.readFile(filePath, 'utf8')
+    const notas = JSON.parse(data)
 
-    const notas = await obtenerNotas()
-
-    const index = notas.findIndex(
-      (nota) => nota.id === Number(id)
-    )
+    const index = notas.findIndex((nota) => Number(nota.id) === Number(id))
 
     if (index === -1) {
       return res.status(404).json({
@@ -181,7 +144,7 @@ const deleteNotaById = async (req, res) => {
 
     notas.splice(index, 1)
 
-    await guardarNotas(notas)
+    await fs.writeFile(filePath, JSON.stringify(notas, null, 2), 'utf8')
 
     return res.status(200).json({
       msg: `Se eliminó la nota con id ${id}`,
@@ -189,7 +152,6 @@ const deleteNotaById = async (req, res) => {
     })
   } catch (error) {
     console.log(error)
-
     return res.status(500).json({
       error: 'No se pudo eliminar la nota'
     })
