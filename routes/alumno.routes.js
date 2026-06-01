@@ -1,7 +1,10 @@
 const { Router } = require('express')
 const {
-  validateInputAlumno
-} = require('../middleware/alumno-validator.middleware')
+  validateAlumnoPut
+} = require('../middleware/alumno-validator-put.middleware')
+const {
+  validateAlumnoPost
+} = require('../middleware/alumno-validator-post.middleware')
 const {
   getAlumnoAll,
   getAlumnoById,
@@ -14,8 +17,8 @@ const rutas = Router()
 
 rutas.get('/', getAlumnoAll)
 rutas.get('/:legajo', getAlumnoById)
-rutas.post('/', validateInputAlumno, postNewAlumno)
-rutas.put('/:legajo', validateInputAlumno, putAlumnoBylegajo)
+rutas.post('/', validateAlumnoPost, postNewAlumno)
+rutas.put('/:legajo', validateAlumnoPut, putAlumnoBylegajo)
 rutas.delete('/:legajo', deleteAlumnoByLegajo)
 
 module.exports = rutas

@@ -1,3 +1,5 @@
+Link de la documentacion de postman: https://documenter.getpostman.com/view/55293974/2sBXwnsBXc
+
 # Documentación #
 ### El archivo README.md debe incluir lo siguiente: ###
 - Número de grupo e integrantes.
